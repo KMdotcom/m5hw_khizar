@@ -8,15 +8,15 @@ public class MainTest {
 
     // helpers to ensure tests initially fail for the given starter code
     void starterTestPasswordValidator() {
-        assertFalse(Main.checkForPassword("REPLACE WITH CORRECT REGEX", 6));
+        assertFalse(Main.checkForPassword("\"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\d).{\" + minLength + \",}$\"", 6));
     }
 
     void starterTestExtractEmails() {
-        assertTrue(Main.extractEmails("REPLACE WITH CORRECT REGEX").isEmpty());
+        assertTrue(Main.extractEmails("\\b[a-zA-Z0-9._%+-]+@(?:mail\\.)?utoronto\\.ca\\b").isEmpty());
     }
 
     void starterTestCheckForDoubles() {
-        assertFalse(Main.checkForDoubles("replace with correct regex"));
+        assertFalse(Main.checkForDoubles("\".*\" + c + \".*\" + c + \".*\""));
     }
 
 

@@ -8,6 +8,11 @@ import java.util.regex.Pattern;
 
 public class Main {
 
+    /**
+     * The Main method for this assignment.
+     * You can optionally run this to interactively try the three methods.
+     * @param args parameters are unused
+     */
     public static void main(String[] args) {
         final Scanner scanner = new Scanner(System.in);
         System.out.print("Please enter a string: ");
@@ -19,39 +24,45 @@ public class Main {
         System.out.println(checkForDoubles(userInput));
     }
 
+    // Method 1 for checking if a string matches a regex: using Pattern.matches
+    // TODO: Modify this code to check if the given string is non-empty, contains at least
+    //       one lower case letter, at least one upper case letter, and at least one digit. If the
+    //       string has all of these properties, the method should return true. If it is missing one
+    //       or more properties, it should return false.
+
     /**
      * Returns whether a given string is non-empty, contains one lower case letter,
      * at least one upper case letter, at least one digit, and meets the minimum length.
+     * @param str the string to check for the properties in
+     * @param minLength the minimum length required for the password
+     * @return whether the string satisfies the password requirements
      */
     public static boolean checkForPassword(String str, int minLength) {
-        if (str == null) {
+        if (str == null || str.length() < minLength) {
             return false;
         }
-        if (str.length() < minLength) {
-            return false;
-        }
-        // Check for at least one lowercase, one uppercase, and one digit
-        boolean hasLower = false;
-        boolean hasUpper = false;
-        boolean hasDigit = false;
-
-        for (char c : str.toCharArray()) {
-            if (Character.isLowerCase(c)) hasLower = true;
-            if (Character.isUpperCase(c)) hasUpper = true;
-            if (Character.isDigit(c)) hasDigit = true;
-        }
-
-        return hasLower && hasUpper && hasDigit;
+        final boolean propertyOne = Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{" + minLength + ",}$", str);
+        // as needed, modify this code.
+        return propertyOne;
     }
+
+    // Method 2 for checking if a string conforms to a regex: using Matcher.find
+    // TODO: Modify this method to return a list of all email addresses contained in the
+    //       input string that end with "@mail.utoronto.ca" or "@utoronto.ca" with at least one
+    //       character before the "@" symbol. The email addresses should be in the order they
+    //       appear in the string.
 
     /**
      * Returns a list of email addresses that occur in a given string.
+     * @param str the string to look for email addresses in
+     * @return a list containing the email addresses in the string.
      */
     public static List<String> extractEmails(String str) {
         final List<String> result = new ArrayList<>();
         if (str == null) {
             return result;
         }
+
         final Pattern pattern = Pattern.compile("\\b[a-zA-Z0-9._%+-]+@(?:mail\\.)?utoronto\\.ca\\b");
         final Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
@@ -60,22 +71,27 @@ public class Main {
         return result;
     }
 
+    // Method 3 for checking if a string conforms to a regex: using String.matches
+
+    // TODO: Modify this method to check whether or not the string contains the same capital letter
+    //       twice. For example "Amazing Apple" contains "A" twice. If the string does repeat the same
+    //       capital letter twice, the method should return true. Otherwise it should return false.
+
     /**
      * Checks whether a given string contains the same capital letter twice.
+     * @param str the string to look for doubles in
+     * @return whether str contains the same capital letter twice.
      */
     public static boolean checkForDoubles(String str) {
         if (str == null) {
             return false;
         }
-        // More reliable approach for checking duplicate capital letters
-        boolean[] seen = new boolean[26]; // A-Z
-        for (char c : str.toCharArray()) {
-            if (c >= 'A' && c <= 'Z') {
-                int index = c - 'A';
-                if (seen[index]) {
-                    return true; // Found duplicate
-                }
-                seen[index] = true;
+        // Fixed regex: looks for any capital letter that appears at least twice
+        // Using .*[A-Z].*\\1.* to find a capital letter that repeats
+        for (char c = 'A'; c <= 'Z'; c++) {
+            String regex = ".*" + c + ".*" + c + ".*";
+            if (str.matches(regex)) {
+                return true;
             }
         }
         return false;
