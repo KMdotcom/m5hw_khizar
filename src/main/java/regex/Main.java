@@ -38,6 +38,9 @@ public class Main {
      * @return whether the string satisfies the password requirements
      */
     public static boolean checkForPassword(String str, int minLength) {
+        if (str == null || str.length() < minLength) {
+            return false;
+        }
         final boolean propertyOne = Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{" + minLength + ",}$", str);
         // as needed, modify this code.
         return propertyOne;
@@ -55,9 +58,13 @@ public class Main {
      * @return a list containing the email addresses in the string.
      */
     public static List<String> extractEmails(String str) {
-        final Pattern pattern = Pattern.compile("[a-zA-Z0-9._%+-]+@(?:mail\\\\.)?utoronto\\\\.ca");
-        final Matcher matcher = pattern.matcher(str);
         final List<String> result = new ArrayList<>();
+        if (str == null) {
+            return result;
+        }
+
+        final Pattern pattern = Pattern.compile("\\b[a-zA-Z0-9._%+-]+@(?:mail\\.)?utoronto\\.ca\\b");
+        final Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
             result.add(matcher.group());
         }
@@ -76,6 +83,17 @@ public class Main {
      * @return whether str contains the same capital letter twice.
      */
     public static boolean checkForDoubles(String str) {
-        return str.matches(".*([A-Z]).*\\\\1.*");
+        if (str == null) {
+            return false;
+        }
+        // Fixed regex: looks for any capital letter that appears at least twice
+        // Using .*[A-Z].*\\1.* to find a capital letter that repeats
+        for (char c = 'A'; c <= 'Z'; c++) {
+            String regex = ".*" + c + ".*" + c + ".*";
+            if (str.matches(regex)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
